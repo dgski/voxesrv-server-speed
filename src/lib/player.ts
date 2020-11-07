@@ -36,7 +36,7 @@ export class PlayerManager {
 			});
 		});
 		server.on('entity-move', (data) => {
-			this.sendPacketAll('EntityMove', data);
+			this.sendPacketAllExcept('EntityMove', data, data.uuid);
 		});
 		server.on('entity-remove', (data) => {
 			this.sendPacketAll('EntityRemove', data);
@@ -87,6 +87,15 @@ export class PlayerManager {
 
 	sendPacketAll(type: string, data: any) {
 		Object.values(this.players).forEach((p: Player) => {
+			p.sendPacket(type, data);
+		});
+	}
+
+	sendPacketAllExcept(type: string, data: any, exceptId : string) {
+		Object.values(this.players).forEach((p: Player) => {
+			if(p.id != exceptId) {
+				return
+			}
 			p.sendPacket(type, data);
 		});
 	}
