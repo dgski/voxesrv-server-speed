@@ -211,7 +211,7 @@ export class Player {
 
 				this._chunksToSend.shift();
 			}
-		}, 50);
+		}, 1000 /*1 second*/);
 	}
 
 	getObject() {
