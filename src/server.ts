@@ -224,6 +224,19 @@ export class Server extends EventEmitter {
 				socket.on('ActionClickEntity', (data) => {
 					player.action_click(data);
 				});
+
+				socket.on('ChunkNeeded', (data) => {
+					console.log("ChunkNeeded", JSON.stringify(data));
+					return
+					socket.send('WorldChunkLoad', {
+						x: 0,
+						y: 0,
+						z: 0,
+						type: true,
+						compressed: false,
+						data: false /*Buffer.from(chunk.data.data.buffer, chunk.data.data.byteOffset),*/
+					});
+				});
 			}
 		});
 

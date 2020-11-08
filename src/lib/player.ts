@@ -206,6 +206,7 @@ export class Player {
 		this._server.emit('player-created', this);
 		this.updateChunks();
 
+		/*
 		this._chunksInterval = setInterval(async () => {
 			if (this._chunksToSend.length > 0) {
 				const chunk = await this.world.getChunk(this._chunksToSend[0]);
@@ -220,7 +221,8 @@ export class Player {
 
 				this._chunksToSend.shift();
 			}
-		}, 1000 /*1 second*/);
+		}, 1000 1 second); // 1 second
+		*/
 	}
 
 	getObject() {
