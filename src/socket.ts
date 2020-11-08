@@ -9,7 +9,7 @@ export class BaseSocket {
 	constructor() {}
 
 	send(type: string, data: Object) {
-		console.log("send", {type:type ,data:data})
+		console.log("send", JSON.stringify({type:type ,data: JSON.stringify(data).slice(0, 100)}))
 		const packet = protocol.parseToMessage('server', type, data);
 		if (packet != null) {
 			this.socket.send(packet);

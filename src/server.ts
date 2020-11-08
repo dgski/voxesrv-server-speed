@@ -199,17 +199,17 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionBlockBreak', (data) => {
-					console.error('ActionBlockBreak', data);
+					console.log('ActionBlockBreak', JSON.stringify(data));
 					player.action_blockbreak(data);
 				});
 
 				socket.on('ActionBlockPlace', (data) => {
-					console.log('ActionBlockPlace', data);
+					console.log('ActionBlockPlace', JSON.stringify(data));
 					player.action_blockplace(data);
 				});
 
 				socket.on('ActionMove', (data) => {
-					console.log('ActionMove', data);
+					console.log('ActionMove', JSON.stringify(data));
 					player.action_move(data);
 				});
 

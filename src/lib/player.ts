@@ -338,6 +338,8 @@ export class Player {
 	}
 
 	action_blockbreak(data: pClient.IActionBlockBreak & { cancel: boolean }) {
+		console.log("action_blockbreak", JSON.stringify(data))
+
 		if (data.x == undefined || data.y == undefined || data.z == undefined) return;
 
 		data.cancel = false;
@@ -350,7 +352,11 @@ export class Player {
 		const block = this.world.getBlock(blockpos, false);
 		const pos = this.entity.data.position;
 
-		if (vec.dist(pos, [data.x, data.y, data.z]) < 14 && block != undefined && block.unbreakable != true) {
+		console.log("vect.dist=", vec.dist(pos, [data.x, data.y, data.z]))
+		console.log("block=", block)
+		console.log("block.unbrekable", block.unbreakable)
+
+		if (/*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/ block != undefined && block.unbreakable != true) {
 			this.world.setBlock(blockpos, 0, false);
 			this._players.sendPacketAll('WorldBlockUpdate', {
 				id: 0,
@@ -372,7 +378,7 @@ export class Player {
 		const itemstack: ItemStack = inv.items[inv.selected];
 		const pos = this.entity.data.position;
 
-		if (vec.dist(pos, [data.x, data.y, data.z]) < 14 && itemstack != undefined && itemstack.id != undefined) {
+		if (/*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/ itemstack != undefined && itemstack.id != undefined) {
 			if (itemstack != null && this._server.registry.items[itemstack.id].block != undefined) {
 				const item = this._server.registry.items[itemstack.id];
 				//player.inv.remove(id, item.id, 1, {})
