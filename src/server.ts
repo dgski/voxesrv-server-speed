@@ -199,7 +199,7 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionBlockBreak', (data) => {
-					console.log('ActionBlockBreak', data);
+					console.error('ActionBlockBreak', data);
 					player.action_blockbreak(data);
 				});
 

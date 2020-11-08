@@ -1,4 +1,5 @@
 import * as protocol from './lib/protocol';
+import * as console from './lib/console';
 
 export class BaseSocket {
 	socket: any;
