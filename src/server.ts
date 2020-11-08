@@ -174,6 +174,7 @@ export class Server extends EventEmitter {
 				socket.send('PlayerEntity', { uuid: player.entity.id });
 
 				Object.entries(player.world.entities).forEach((data) => {
+					console.log("sending existing players to new player. existing=", data)
 					socket.send('EntityCreate', {
 						uuid: data[0],
 						data: JSON.stringify(data[1].getObject().data),
@@ -198,14 +199,17 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionBlockBreak', (data) => {
+					console.log('ActionBlockBreak', data);
 					player.action_blockbreak(data);
 				});
 
 				socket.on('ActionBlockPlace', (data) => {
+					console.log('ActionBlockPlace', data);
 					player.action_blockplace(data);
 				});
 
 				socket.on('ActionMove', (data) => {
+					console.log('ActionMove', data);
 					player.action_move(data);
 				});
 
