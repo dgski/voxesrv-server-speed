@@ -16,10 +16,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/VoxelSrv/voxelsrv-server.git"
-	},
-	"bugs": {
-		"url": "https://github.com/VoxelSrv/voxelsrv-server/issues"
+		"url": "https://github.com/dgski/voxesrv-server-speed"
 	},
 	"author": "Patbox <patbox4@outlook.com> (https://pb4.eu)",
 	"license": "MIT",
