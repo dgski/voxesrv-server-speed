@@ -19,7 +19,7 @@ export declare const executorchat: {
     permissions: PermissionHolder;
 };
 export declare const obj: {
-    (...data: any[]): void;
+    (message?: any, ...optionalParams: any[]): void;
     (message?: any, ...optionalParams: any[]): void;
 };
 //# sourceMappingURL=console.d.ts.map

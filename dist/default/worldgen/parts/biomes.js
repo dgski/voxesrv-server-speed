@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BeachBiome = exports.OceanBiome = exports.IceMountainsBiome = exports.MountainsBiome = exports.DesertBiome = exports.ForestBiome = exports.IcePlainsBiome = exports.PlainsBiome = exports.BaseBiome = void 0;
 const open_simplex_noise_1 = require("open-simplex-noise");
 const murmur_numbers_1 = __importDefault(require("murmur-numbers"));
 class BaseBiome {

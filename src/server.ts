@@ -209,7 +209,7 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionMove', (data) => {
-					console.log('ActionMove', JSON.stringify(data));
+					console.log('ActionMove2', JSON.stringify(data));
 					player.action_move(data);
 				});
 
@@ -222,20 +222,24 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionClickEntity', (data) => {
-					player.action_click(data);
+					player.action_click(data)
 				});
 
 				socket.on('ChunkNeeded', (data) => {
 					console.log("ChunkNeeded", JSON.stringify(data));
-					return
-					socket.send('WorldChunkLoad', {
-						x: 0,
-						y: 0,
-						z: 0,
-						type: true,
-						compressed: false,
-						data: false /*Buffer.from(chunk.data.data.buffer, chunk.data.data.byteOffset),*/
-					});
+					
+					const id = player.world.stringToID(data.id)
+					player.world.getChunk(id)
+					.then((chunk) =>  {
+						socket.send('WorldChunkLoad', {
+							x: id[0],
+							y: 0,
+							z: id[1],
+							type: true,
+							compressed: false,
+							data: Buffer.from(chunk.data.data.buffer, chunk.data.data.byteOffset)
+						});
+					})
 				});
 			}
 		});

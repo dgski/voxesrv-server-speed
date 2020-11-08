@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.birchTree = exports.oakTree = void 0;
 const ndarray = require("ndarray");
 function oakTree(seed, hash, block) {
     const gen = new ndarray(new Uint16Array(16 * 16 * 16), [16, 16, 16]);

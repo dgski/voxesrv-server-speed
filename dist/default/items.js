@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setup = void 0;
 const registry_1 = require("../lib/registry");
 function setup(registry) {
     registry.addItem(new registry_1.ItemBlock('stone', 'Stone', 'block/stone', 64, 'stone', false));

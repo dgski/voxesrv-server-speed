@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setup = void 0;
 const chat_1 = require("../lib/chat");
 const registry_1 = require("../lib/registry");
+{
+    Server;
+}
+from;
+'../server';
 function setup(registry, server) {
     async function helpCommand(executor, arg) {
         executor.send([new chat_1.ChatComponent('List of all commands:', '#9ed0ff', 'Lato-Bold')]);

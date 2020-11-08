@@ -1,27 +1,29 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defaultPlayerMovement = exports.Player = exports.PlayerManager = void 0;
 const vec = __importStar(require("gl-vec3"));
+{
+    EntityManager, Entity;
+}
+from;
+'./entity';
 const worlds_1 = require("./worlds");
+{
+    ItemStack, Registry;
+}
+from;
+'./registry';
+{
+    Server;
+}
+from;
+'../server';
 const fs = __importStar(require("fs"));
 const console = __importStar(require("./console"));
 const chat = __importStar(require("./chat"));
@@ -42,7 +44,7 @@ class PlayerManager {
             });
         });
         server.on('entity-move', (data) => {
-            this.sendPacketAll('EntityMove', data);
+            this.sendPacketAllExcept('EntityMove', data, data.uuid);
         });
         server.on('entity-remove', (data) => {
             this.sendPacketAll('EntityRemove', data);
@@ -87,6 +89,14 @@ class PlayerManager {
     }
     sendPacketAll(type, data) {
         Object.values(this.players).forEach((p) => {
+            p.sendPacket(type, data);
+        });
+    }
+    sendPacketAllExcept(type, data, exceptId) {
+        Object.values(this.players).forEach((p) => {
+            if (p.id != exceptId) {
+                return;
+            }
             p.sendPacket(type, data);
         });
     }
@@ -164,6 +174,7 @@ class Player {
         });
         this._server.emit('player-created', this);
         this.updateChunks();
+        /*
         this._chunksInterval = setInterval(async () => {
             if (this._chunksToSend.length > 0) {
                 const chunk = await this.world.getChunk(this._chunksToSend[0]);
@@ -175,9 +186,11 @@ class Player {
                     compressed: false,
                     data: Buffer.from(chunk.data.data.buffer, chunk.data.data.byteOffset),
                 });
+
                 this._chunksToSend.shift();
             }
-        }, 50);
+        }, 1000 1 second); // 1 second
+        */
     }
     getObject() {
         return {
@@ -281,6 +294,7 @@ class Player {
         return this.id;
     }
     action_blockbreak(data) {
+        console.log("action_blockbreak", JSON.stringify(data));
         if (data.x == undefined || data.y == undefined || data.z == undefined)
             return;
         data.cancel = false;
@@ -292,7 +306,10 @@ class Player {
         const blockpos = [data.x, data.y, data.z];
         const block = this.world.getBlock(blockpos, false);
         const pos = this.entity.data.position;
-        if (vec.dist(pos, [data.x, data.y, data.z]) < 14 && block != undefined && block.unbreakable != true) {
+        console.log("vect.dist=", vec.dist(pos, [data.x, data.y, data.z]));
+        console.log("block=", block);
+        console.log("block.unbrekable", block.unbreakable);
+        if ( /*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/block != undefined && block.unbreakable != true) {
             this.world.setBlock(blockpos, 0, false);
             this._players.sendPacketAll('WorldBlockUpdate', {
                 id: 0,
@@ -312,7 +329,7 @@ class Player {
         const inv = this.inventory;
         const itemstack = inv.items[inv.selected];
         const pos = this.entity.data.position;
-        if (vec.dist(pos, [data.x, data.y, data.z]) < 14 && itemstack != undefined && itemstack.id != undefined) {
+        if ( /*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/itemstack != undefined && itemstack.id != undefined) {
             if (itemstack != null && this._server.registry.items[itemstack.id].block != undefined) {
                 const item = this._server.registry.items[itemstack.id];
                 //player.inv.remove(id, item.id, 1, {})

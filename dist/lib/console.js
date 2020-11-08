@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.obj = exports.executorchat = exports.executor = exports.error = exports.warn = exports.chat = exports.log = exports.event = void 0;
 const terminal_kit_1 = require("terminal-kit");
 const permissions_1 = require("./permissions");
 const events_1 = require("events");

@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PlayerPermissionHolder = exports.PermissionHolder = exports.PermissionManager = void 0;
+{
+    Server;
+}
+from;
+'../server';
 class PermissionManager {
     constructor(server) {
         this.groups = {};

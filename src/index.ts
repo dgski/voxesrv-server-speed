@@ -5,7 +5,8 @@ import { Server } from './server';
 
 export function startServer() {
 	let json = '{"port": 3000}';
-	if (fs.existsSync('./config/') && fs.existsSync('./config/config.json')) json = fs.readFileSync('./config/config.json').toString();
+	if (fs.existsSync('./config/') && fs.existsSync('./config/config.json'))
+		json = fs.readFileSync('./config/config.json').toString();
 
 	const cfg = JSON.parse(json.toString());
 

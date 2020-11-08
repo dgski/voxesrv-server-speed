@@ -9,6 +9,7 @@ let revMapClient = {};
 mapClient.forEach((x, i) => (revMapClient[x] = i));
 mapServer.forEach((x, i) => (revMapServer[x] = i));
 
+
 export function parseToObject(pType, data) {
 	let type = '';
 	let packet: any;

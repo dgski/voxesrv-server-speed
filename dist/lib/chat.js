@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validate = exports.sendMlt = exports.convertToPlain = exports.convertFromPlain = exports.ChatComponent = exports.event = void 0;
 const events_1 = require("events");
 exports.event = new events_1.EventEmitter();
 class ChatComponent {

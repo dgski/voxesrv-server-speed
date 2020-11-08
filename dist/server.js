@@ -1,28 +1,15 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
     return result;
 };
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Server = void 0;
 const events_1 = require("events");
 const fs = __importStar(require("fs"));
 const registry_1 = require("./lib/registry");
@@ -67,7 +54,7 @@ class Server extends events_1.EventEmitter {
             this.worlds.load('default');
     }
     async startServer() {
-        console.log(`^yStarting VoxelSRV server version^: ${values_1.serverVersion} ^y[Protocol:^: ${values_1.serverProtocol}^y]`);
+        console.log(`^yStarting FastVoxel server version^: ${values_1.serverVersion} ^y[Protocol:^: ${values_1.serverProtocol}^y]`);
         ['./plugins', './players', './worlds', './config'].forEach((element) => {
             if (!fs.existsSync(element)) {
                 try {
@@ -162,6 +149,7 @@ class Server extends events_1.EventEmitter {
                 });
                 socket.send('PlayerEntity', { uuid: player.entity.id });
                 Object.entries(player.world.entities).forEach((data) => {
+                    console.log("sending existing players to new player. existing=", data);
                     socket.send('EntityCreate', {
                         uuid: data[0],
                         data: JSON.stringify(data[1].getObject().data),
@@ -183,12 +171,15 @@ class Server extends events_1.EventEmitter {
                     player.action_chatsend(data);
                 });
                 socket.on('ActionBlockBreak', (data) => {
+                    console.log('ActionBlockBreak', JSON.stringify(data));
                     player.action_blockbreak(data);
                 });
                 socket.on('ActionBlockPlace', (data) => {
+                    console.log('ActionBlockPlace', JSON.stringify(data));
                     player.action_blockplace(data);
                 });
                 socket.on('ActionMove', (data) => {
+                    console.log('ActionMove2', JSON.stringify(data));
                     player.action_move(data);
                 });
                 socket.on('ActionInventoryClick', (data) => {
@@ -199,6 +190,21 @@ class Server extends events_1.EventEmitter {
                 });
                 socket.on('ActionClickEntity', (data) => {
                     player.action_click(data);
+                });
+                socket.on('ChunkNeeded', (data) => {
+                    console.log("ChunkNeeded", JSON.stringify(data));
+                    const id = player.world.stringToID(data.id);
+                    player.world.getChunk(id)
+                        .then((chunk) => {
+                        socket.send('WorldChunkLoad', {
+                            x: id[0],
+                            y: 0,
+                            z: id[1],
+                            type: true,
+                            compressed: false,
+                            data: Buffer.from(chunk.data.data.buffer, chunk.data.data.byteOffset)
+                        });
+                    });
                 });
             }
         });

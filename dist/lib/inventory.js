@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ArmorInventory = exports.PlayerInventory = exports.Inventory = void 0;
 const registry_1 = require("./registry");
 const events_1 = require("events");
+{
+    Server;
+}
+from;
+'../server';
 class Inventory {
     constructor(size, data, server) {
         this.selected = 0;

@@ -1,6 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Entity = exports.EntityManager = void 0;
+{
+    WorldManager, World, Chunk;
+}
+from;
+'./worlds';
+{
+    Server;
+}
+from;
+'../server';
 const worlds_1 = require("./worlds");
 const uuid_1 = require("uuid");
 class EntityManager {

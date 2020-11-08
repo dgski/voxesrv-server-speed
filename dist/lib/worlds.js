@@ -1,27 +1,19 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateID = exports.getRandomSeed = exports.globalToLocal = exports.chunkIDFromGlobal = exports.globalToChunk = exports.Chunk = exports.World = exports.WorldManager = void 0;
 const fs = __importStar(require("fs"));
 const console = __importStar(require("./console"));
+{
+    Server;
+}
+from;
+'../server';
 const format = __importStar(require("../formats/world"));
 const pako = __importStar(require("pako"));
 const ndarray = require("ndarray");
@@ -102,15 +94,15 @@ class World {
             });
             this.autoSaveInterval = setInterval(async () => {
                 this.saveAll();
-            }, 30000);
+            }, 10800000 /*3 hours*/);
         }
         this.chunkUnloadInterval = setInterval(async () => {
             const chunklist = Object.keys(this.chunks);
             chunklist.forEach((id) => {
-                if (Date.now() - this.chunks[id].lastUse >= 5000 && !!this.chunks[id].forceload)
+                if (Date.now() - this.chunks[id].lastUse >= 600000 /*10 minutes*/ && !!this.chunks[id].forceload)
                     this.unloadChunk(this.stringToID(id));
             });
-        }, 1000);
+        }, 600000 /*10 minutes*/);
     }
     stringToID(id) {
         const x = id.split(',');
