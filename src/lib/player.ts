@@ -220,7 +220,7 @@ export class Player {
 
 				this._chunksToSend.shift();
 			}
-		}, 1000 /*1 second*/);
+		}, 50);
 	}
 
 	getObject() {

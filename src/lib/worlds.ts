@@ -108,15 +108,15 @@ export class World {
 
 			this.autoSaveInterval = setInterval(async () => {
 				this.saveAll();
-			}, 10800000 /*3 hours*/);
+			}, 30000);
 		}
 
 		this.chunkUnloadInterval = setInterval(async () => {
 			const chunklist = Object.keys(this.chunks);
 			chunklist.forEach((id) => {
-				if (Date.now() - this.chunks[id].lastUse >= 600000 /*10 minutes*/ && !!this.chunks[id].forceload) this.unloadChunk(this.stringToID(id));
+				if (Date.now() - this.chunks[id].lastUse >= 5000 /*10 minutes*/ && !!this.chunks[id].forceload) this.unloadChunk(this.stringToID(id));
 			});
-		}, 600000 /*10 minutes*/);
+		}, 1000 /*10 minutes*/);
 	}
 
 	stringToID(id: string): types.XZ {
