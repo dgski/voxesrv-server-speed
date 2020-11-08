@@ -36,7 +36,7 @@ export class PlayerManager {
 			});
 		});
 		server.on('entity-move', (data) => {
-			this.sendPacketAllExcept('EntityMove', data, data.uuid);
+			this.sendPacketAll('EntityMove', data);
 		});
 		server.on('entity-remove', (data) => {
 			this.sendPacketAll('EntityRemove', data);
