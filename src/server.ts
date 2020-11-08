@@ -59,7 +59,7 @@ export class Server extends EventEmitter {
 	}
 
 	private async startServer() {
-		console.log(`^yStarting VoxelSRV server version^: ${serverVersion} ^y[Protocol:^: ${serverProtocol}^y]`);
+		console.log(`^yStarting FastVoxel server version^: ${serverVersion} ^y[Protocol:^: ${serverProtocol}^y]`);
 		['./plugins', './players', './worlds', './config'].forEach((element) => {
 			if (!fs.existsSync(element)) {
 				try {
