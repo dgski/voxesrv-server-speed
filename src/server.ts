@@ -97,19 +97,12 @@ export class Server extends EventEmitter {
 
 		await this.initDefWorld();
 
-		if (this.config.public) this.heartbeatPing();
-
 		this.status = 'active';
 
 		console.log('^yServer started on port: ^:' + this.config.port);
 	}
 
 	heartbeatPing() {
-		fetch(`http://${heartbeatServer}/addServer?ip=${this.config.address}:${this.config.port}`)
-			.then((res) => res.json())
-			.then((json) => {
-				this.heartbeatID = json.id;
-			});
 	}
 
 	async connectPlayer(socket: BaseSocket) {
@@ -174,7 +167,6 @@ export class Server extends EventEmitter {
 				socket.send('PlayerEntity', { uuid: player.entity.id });
 
 				Object.entries(player.world.entities).forEach((data) => {
-					console.log("sending existing players to new player. existing=", data)
 					socket.send('EntityCreate', {
 						uuid: data[0],
 						data: JSON.stringify(data[1].getObject().data),
@@ -208,7 +200,6 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionMove', (data) => {
-					console.log("Got ActionMove", JSON.stringify(data))
 					player.action_move(data);
 				});
 
