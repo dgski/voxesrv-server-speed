@@ -242,8 +242,6 @@ export class Player {
 	}
 
 	move(pos: types.XYZ) {
-		this._server.emit('player-move', { id: this.id, pos: pos });
-		const chunk = this.entity.chunkID.join('|');
 		this.entity.move(pos);
 	}
 
@@ -289,21 +287,9 @@ export class Player {
 	}
 
 	action_blockbreak(data: pClient.IActionBlockBreak & { cancel: boolean }) {
-		console.log("action_blockbreak", JSON.stringify(data))
-
-		if (data.x == undefined || data.y == undefined || data.z == undefined) return;
-
-		data.cancel = false;
-		for (let x = 0; x <= 5; x++) {
-			this._server.emit(`player-blockbreak-${x}`, this, data);
-			if (data.cancel) return;
-		}
-
 		const blockpos: types.XYZ = [data.x, data.y, data.z];
 		const block = this.world.getBlock(blockpos, false);
-		const pos = this.entity.data.position;
-
-		if (/*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/ block != undefined && block.unbreakable != true) {
+		if (block != undefined && block.unbreakable != true) {
 			this.world.setBlock(blockpos, 0, false);
 			this._players.sendPacketAll('WorldBlockUpdate', {
 				id: 0,
@@ -314,18 +300,7 @@ export class Player {
 		}
 	}
 
-	action_blockplace(data: pClient.IActionBlockPlace & { cancel: boolean }) {
-		data.cancel = false;
-		for (let x = 0; x <= 5; x++) {
-			this._server.emit(`player-blockplace-${x}`, this, data);
-			if (data.cancel) return;
-		}
-
-		const inv = this.inventory;
-		const itemstack: ItemStack = inv.items[inv.selected];
-		const pos = this.entity.data.position;
-
-	
+	action_blockplace(data: pClient.IActionBlockPlace & { cancel: boolean }) {	
 		this.world.setBlock([data.x, data.y, data.z], data.id, false);
 		this._players.sendPacketAll('WorldBlockUpdate', {
 			id: data.id,
@@ -412,24 +387,8 @@ export class Player {
 	}
 
 	action_move(data: pClient.IActionMove & { cancel: boolean }) {
-		if (data.x == undefined || data.y == undefined || data.z == undefined) return;
-
-		const local = globalToChunk([data.x, data.y, data.z]);
-
-		data.cancel = false;
-
-		if (this.world.chunks[local.id.toString()] == undefined) data.cancel = true;
-		else {
-			const blockID = this.world.chunks[local.id.toString()].data.get(Math.floor(local.pos[0]), Math.floor(local.pos[1]), Math.floor(local.pos[2]))
-			const block = this._server.registry.blocks[this._server.registry.blockIDmap[blockID]]
-			if (block == undefined || block.options == undefined) data.cancel = true;
-			else if (block.options.solid != false && block.options.fluid != true) data.cancel = true;
-		}
-		const pos = this.entity.data.position;
 		const move: types.XYZ = [data.x, data.y, data.z];
-		
-		if (vec.dist(pos, move) < 20) this.move(move);
-
+		this.move(move);
 		this.rotate(data.rotation, data.pitch);
 	}
 

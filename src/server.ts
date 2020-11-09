@@ -194,6 +194,7 @@ export class Server extends EventEmitter {
 					player.remove();
 					this.playerCount = this.playerCount - 1;
 				});
+
 				socket.on('ActionMessage', (data) => {
 					player.action_chatsend(data);
 				});
@@ -203,17 +204,11 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionBlockPlace', (data) => {
-					console.log("ActionBlockPlace", JSON.stringify(data));
 					player.action_blockplace(data);
 				});
 
 				socket.on('ActionMove', (data) => {
 					player.action_move(data);
-				});
-
-				socket.on('ActionInventoryClick', (data) => {
-					console.log('ActionInventoryClick', JSON.stringify(data));
-					player.action_invclick(data);
 				});
 
 				socket.on('ChunkNeeded', (data) => {					

@@ -7,13 +7,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const vec = __importStar(require("gl-vec3"));
 {
     EntityManager, Entity;
 }
 from;
 './entity';
-const worlds_1 = require("./worlds");
 {
     ItemStack, Registry;
 }
@@ -205,8 +203,6 @@ class Player {
         this.sendPacket('PlayerTeleport', { x: pos[0], y: pos[1], z: pos[2] });
     }
     move(pos) {
-        this._server.emit('player-move', { id: this.id, pos: pos });
-        const chunk = this.entity.chunkID.join('|');
         this.entity.move(pos);
     }
     send(msg) {
@@ -243,19 +239,9 @@ class Player {
         return this.id;
     }
     action_blockbreak(data) {
-        console.log("action_blockbreak", JSON.stringify(data));
-        if (data.x == undefined || data.y == undefined || data.z == undefined)
-            return;
-        data.cancel = false;
-        for (let x = 0; x <= 5; x++) {
-            this._server.emit(`player-blockbreak-${x}`, this, data);
-            if (data.cancel)
-                return;
-        }
         const blockpos = [data.x, data.y, data.z];
         const block = this.world.getBlock(blockpos, false);
-        const pos = this.entity.data.position;
-        if ( /*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/block != undefined && block.unbreakable != true) {
+        if (block != undefined && block.unbreakable != true) {
             this.world.setBlock(blockpos, 0, false);
             this._players.sendPacketAll('WorldBlockUpdate', {
                 id: 0,
@@ -266,15 +252,6 @@ class Player {
         }
     }
     action_blockplace(data) {
-        data.cancel = false;
-        for (let x = 0; x <= 5; x++) {
-            this._server.emit(`player-blockplace-${x}`, this, data);
-            if (data.cancel)
-                return;
-        }
-        const inv = this.inventory;
-        const itemstack = inv.items[inv.selected];
-        const pos = this.entity.data.position;
         this.world.setBlock([data.x, data.y, data.z], data.id, false);
         this._players.sendPacketAll('WorldBlockUpdate', {
             id: data.id,
@@ -363,24 +340,8 @@ class Player {
         }
     }
     action_move(data) {
-        if (data.x == undefined || data.y == undefined || data.z == undefined)
-            return;
-        const local = worlds_1.globalToChunk([data.x, data.y, data.z]);
-        data.cancel = false;
-        if (this.world.chunks[local.id.toString()] == undefined)
-            data.cancel = true;
-        else {
-            const blockID = this.world.chunks[local.id.toString()].data.get(Math.floor(local.pos[0]), Math.floor(local.pos[1]), Math.floor(local.pos[2]));
-            const block = this._server.registry.blocks[this._server.registry.blockIDmap[blockID]];
-            if (block == undefined || block.options == undefined)
-                data.cancel = true;
-            else if (block.options.solid != false && block.options.fluid != true)
-                data.cancel = true;
-        }
-        const pos = this.entity.data.position;
         const move = [data.x, data.y, data.z];
-        if (vec.dist(pos, move) < 20)
-            this.move(move);
+        this.move(move);
         this.rotate(data.rotation, data.pitch);
     }
     action_click(data) {

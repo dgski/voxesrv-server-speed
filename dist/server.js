@@ -174,15 +174,10 @@ class Server extends events_1.EventEmitter {
                     player.action_blockbreak(data);
                 });
                 socket.on('ActionBlockPlace', (data) => {
-                    console.log("ActionBlockPlace", JSON.stringify(data));
                     player.action_blockplace(data);
                 });
                 socket.on('ActionMove', (data) => {
                     player.action_move(data);
-                });
-                socket.on('ActionInventoryClick', (data) => {
-                    console.log('ActionInventoryClick', JSON.stringify(data));
-                    player.action_invclick(data);
                 });
                 socket.on('ChunkNeeded', (data) => {
                     const id = player.world.stringToID(data.id);
