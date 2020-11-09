@@ -208,6 +208,7 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionMove', (data) => {
+					console.log("Got ActionMove", JSON.stringify(data))
 					player.action_move(data);
 				});
 

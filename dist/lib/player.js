@@ -42,7 +42,7 @@ class PlayerManager {
             });
         });
         server.on('entity-move', (data) => {
-            this.sendPacketAllExcept('EntityMove', data, data.uuid);
+            this.sendPacketAll('EntityMove', data);
         });
         server.on('entity-remove', (data) => {
             this.sendPacketAll('EntityRemove', data);
@@ -92,7 +92,8 @@ class PlayerManager {
     }
     sendPacketAllExcept(type, data, exceptId) {
         Object.values(this.players).forEach((p) => {
-            if (p.id != exceptId) {
+            console.log("player=", JSON.stringify(p.getObject()), "exceptId", exceptId);
+            if (p.id === exceptId) {
                 return;
             }
             p.sendPacket(type, data);

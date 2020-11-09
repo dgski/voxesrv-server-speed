@@ -177,6 +177,7 @@ class Server extends events_1.EventEmitter {
                     player.action_blockplace(data);
                 });
                 socket.on('ActionMove', (data) => {
+                    console.log("Got ActionMove", JSON.stringify(data));
                     player.action_move(data);
                 });
                 socket.on('ChunkNeeded', (data) => {
