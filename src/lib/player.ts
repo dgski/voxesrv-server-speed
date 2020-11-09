@@ -204,25 +204,6 @@ export class Player {
 		});
 
 		this._server.emit('player-created', this);
-		this.updateChunks();
-
-		/*
-		this._chunksInterval = setInterval(async () => {
-			if (this._chunksToSend.length > 0) {
-				const chunk = await this.world.getChunk(this._chunksToSend[0]);
-				this.sendPacket('WorldChunkLoad', {
-					x: this._chunksToSend[0][0],
-					y: 0,
-					z: this._chunksToSend[0][1],
-					type: true,
-					compressed: false,
-					data: Buffer.from(chunk.data.data.buffer, chunk.data.data.byteOffset),
-				});
-
-				this._chunksToSend.shift();
-			}
-		}, 1000 1 second); // 1 second
-		*/
 	}
 
 	getObject() {
@@ -258,14 +239,12 @@ export class Player {
 		this.entity.teleport(pos, eworld);
 		this.world = typeof eworld == 'string' ? this._players._worlds.get(eworld) : eworld;
 		this.sendPacket('PlayerTeleport', { x: pos[0], y: pos[1], z: pos[2] });
-		this.updateChunks();
 	}
 
 	move(pos: types.XYZ) {
 		this._server.emit('player-move', { id: this.id, pos: pos });
 		const chunk = this.entity.chunkID.join('|');
 		this.entity.move(pos);
-		if (this.entity.chunkID.join('|') != chunk) this.updateChunks();
 	}
 
 	send(msg: string | chat.ChatMessage) {
@@ -303,36 +282,6 @@ export class Player {
 	}
 
 	async updateChunks() {
-		const chunk = this.entity.chunkID;
-		const loadedchunks = { ...this.chunks };
-		for (let w = 0; w <= this._server.config.viewDistance; w++) {
-			for (let x = 0 - w; x <= 0 + w; x++) {
-				for (let z = 0 - w; z <= 0 + w; z++) {
-					const cid: types.XZ = [chunk[0] + x, chunk[1] + z];
-					const id = cid.toString();
-					if (loadedchunks[id] == undefined) {
-						this.chunks[id] = true;
-						this._chunksToSend.push(cid);
-					}
-					if (this.world.chunks[cid.toString()] != undefined) this.world.chunks[cid.toString()].keepAlive();
-					loadedchunks[cid.toString()] = false;
-				}
-			}
-		}
-
-		const toRemove = Object.entries(loadedchunks);
-		toRemove.forEach((item) => {
-			if (item[1] == true) {
-				delete this.chunks[item[0]];
-				const cid = item[0].split(',');
-				this.sendPacket('WorldChunkUnload', {
-					x: parseInt(cid[0]),
-					y: 0,
-					z: parseInt(cid[1]),
-					type: true,
-				});
-			}
-		});
 	}
 
 	get getID() {
@@ -353,10 +302,6 @@ export class Player {
 		const blockpos: types.XYZ = [data.x, data.y, data.z];
 		const block = this.world.getBlock(blockpos, false);
 		const pos = this.entity.data.position;
-
-		console.log("vect.dist=", vec.dist(pos, [data.x, data.y, data.z]))
-		console.log("block=", block)
-		console.log("block.unbrekable", block.unbreakable)
 
 		if (/*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/ block != undefined && block.unbreakable != true) {
 			this.world.setBlock(blockpos, 0, false);
@@ -380,19 +325,14 @@ export class Player {
 		const itemstack: ItemStack = inv.items[inv.selected];
 		const pos = this.entity.data.position;
 
-		if (/*vec.dist(pos, [data.x, data.y, data.z]) < 14* &&*/ itemstack != undefined && itemstack.id != undefined) {
-			if (itemstack != null && this._server.registry.items[itemstack.id].block != undefined) {
-				const item = this._server.registry.items[itemstack.id];
-				//player.inv.remove(id, item.id, 1, {})
-				this.world.setBlock([data.x, data.y, data.z], item.block.getRawID(), false);
-				this._players.sendPacketAll('WorldBlockUpdate', {
-					id: this._players._server.registry.blockPalette[item.block.id],
-					x: data.x,
-					y: data.y,
-					z: data.z,
-				});
-			}
-		}
+	
+		this.world.setBlock([data.x, data.y, data.z], data.id, false);
+		this._players.sendPacketAll('WorldBlockUpdate', {
+			id: data.id,
+			x: data.x,
+			y: data.y,
+			z: data.z,
+		});
 	}
 
 	action_invclick(data: pClient.IActionInventoryClick & { cancel: boolean }) {
@@ -487,20 +427,7 @@ export class Player {
 		}
 		const pos = this.entity.data.position;
 		const move: types.XYZ = [data.x, data.y, data.z];
-
-		for (let x = 0; x <= 5; x++) {
-			this._server.emit(`player-move-${x}`, this, data);
-			if (data.cancel) {
-				this.sendPacket('PlayerTeleport', { x: pos[0], y: pos[1], z: pos[2] });
-				return;
-			}
-		}
-
-		if (Math.abs(data.x) > 120000 || data.y > 120000 || Math.abs(data.z) > 120000) {
-			this.sendPacket('PlayerTeleport', { x: pos[0], y: pos[1], z: pos[2] });
-			return;
-		}
-
+		
 		if (vec.dist(pos, move) < 20) this.move(move);
 
 		this.rotate(data.rotation, data.pitch);

@@ -199,35 +199,24 @@ export class Server extends EventEmitter {
 				});
 
 				socket.on('ActionBlockBreak', (data) => {
-					console.log('ActionBlockBreak', JSON.stringify(data));
 					player.action_blockbreak(data);
 				});
 
 				socket.on('ActionBlockPlace', (data) => {
-					console.log('ActionBlockPlace', JSON.stringify(data));
+					console.log("ActionBlockPlace", JSON.stringify(data));
 					player.action_blockplace(data);
 				});
 
 				socket.on('ActionMove', (data) => {
-					console.log('ActionMove2', JSON.stringify(data));
 					player.action_move(data);
 				});
 
 				socket.on('ActionInventoryClick', (data) => {
+					console.log('ActionInventoryClick', JSON.stringify(data));
 					player.action_invclick(data);
 				});
 
-				socket.on('ActionClick', (data) => {
-					player.action_click(data);
-				});
-
-				socket.on('ActionClickEntity', (data) => {
-					player.action_click(data)
-				});
-
-				socket.on('ChunkNeeded', (data) => {
-					console.log("ChunkNeeded", JSON.stringify(data));
-					
+				socket.on('ChunkNeeded', (data) => {					
 					const id = player.world.stringToID(data.id)
 					player.world.getChunk(id)
 					.then((chunk) =>  {
