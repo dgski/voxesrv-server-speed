@@ -36,7 +36,7 @@ export class PlayerManager {
 			});
 		});
 		server.on('entity-move', (data) => {
-			this.sendPacketAll('EntityMove', data);
+			this.sendPacketAllExcept('EntityMove', data, data.uuid);
 		});
 		server.on('entity-remove', (data) => {
 			this.sendPacketAll('EntityRemove', data);
@@ -93,8 +93,7 @@ export class PlayerManager {
 
 	sendPacketAllExcept(type: string, data: any, exceptId : string) {
 		Object.values(this.players).forEach((p: Player) => {
-			console.log("player=", JSON.stringify(p.getObject()), "exceptId", exceptId)
-			if(p.id === exceptId) {
+			if(p.entity.id === exceptId) {
 				return
 			}
 			p.sendPacket(type, data);
@@ -118,8 +117,6 @@ export class Player {
 		items: { 0: null, 1: null, 2: null, 3: null },
 		result: null,
 	};
-	_chunksToSend = [];
-	_chunksInterval: any;
 
 	_players: PlayerManager;
 	_server: Server;
@@ -229,7 +226,6 @@ export class Player {
 		this._server.emit('player-quit', this);
 		this._players.save(this.id, this.getObject());
 		this.entity.remove();
-		clearInterval(this._chunksInterval);
 
 		setTimeout(() => {
 			delete this._players.players[this.id];
