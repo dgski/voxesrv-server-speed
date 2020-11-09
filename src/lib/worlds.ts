@@ -108,7 +108,7 @@ export class World {
 
 			this.autoSaveInterval = setInterval(async () => {
 				this.saveAll();
-			}, 10800000 /*3 hours*/);
+			}, 1200000 /*20 minutes*/);
 		}
 
 		this.chunkUnloadInterval = setInterval(async () => {
