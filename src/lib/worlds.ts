@@ -111,12 +111,14 @@ export class World {
 			}, 1200000 /*20 minutes*/);
 		}
 
+		/*
 		this.chunkUnloadInterval = setInterval(async () => {
 			const chunklist = Object.keys(this.chunks);
 			chunklist.forEach((id) => {
-				if (Date.now() - this.chunks[id].lastUse >= 600000 /*10 minutes*/ && !!this.chunks[id].forceload) this.unloadChunk(this.stringToID(id));
+				if (Date.now() - this.chunks[id].lastUse >= 600000 && !!this.chunks[id].forceload) this.unloadChunk(this.stringToID(id));
 			});
-		}, 600000 /*10 minutes*/);
+		}, 600000);
+		*/
 	}
 
 	stringToID(id: string): types.XZ {

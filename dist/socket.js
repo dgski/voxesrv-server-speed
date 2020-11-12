@@ -8,13 +8,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const protocol = __importStar(require("./lib/protocol"));
-const console = __importStar(require("./lib/console"));
 class BaseSocket {
     constructor() {
         this.listeners = {};
     }
     send(type, data) {
-        console.log("send", JSON.stringify({ type: type, data: JSON.stringify(data).slice(0, 100) }));
+        //console.log("send", JSON.stringify({type:type ,data: JSON.stringify(data).slice(0, 100)}))
         const packet = protocol.parseToMessage('server', type, data);
         if (packet != null) {
             this.socket.send(packet);

@@ -21,7 +21,6 @@ const configs = __importStar(require("./lib/configs"));
 const player_1 = require("./lib/player");
 const chat = __importStar(require("./lib/chat"));
 const semver = __importStar(require("semver"));
-const node_fetch_1 = __importDefault(require("node-fetch"));
 const normal_1 = __importDefault(require("./default/worldgen/normal"));
 //import flatGenerator from './default/worldgen/flat';
 const values_1 = require("./values");
@@ -83,17 +82,10 @@ class Server extends events_1.EventEmitter {
         this.emit('registry-define');
         this.registry._finalize();
         await this.initDefWorld();
-        if (this.config.public)
-            this.heartbeatPing();
         this.status = 'active';
         console.log('^yServer started on port: ^:' + this.config.port);
     }
     heartbeatPing() {
-        node_fetch_1.default(`http://${values_1.heartbeatServer}/addServer?ip=${this.config.address}:${this.config.port}`)
-            .then((res) => res.json())
-            .then((json) => {
-            this.heartbeatID = json.id;
-        });
     }
     async connectPlayer(socket) {
         if (this.status != 'active')
@@ -149,7 +141,6 @@ class Server extends events_1.EventEmitter {
                 });
                 socket.send('PlayerEntity', { uuid: player.entity.id });
                 Object.entries(player.world.entities).forEach((data) => {
-                    console.log("sending existing players to new player. existing=", data);
                     socket.send('EntityCreate', {
                         uuid: data[0],
                         data: JSON.stringify(data[1].getObject().data),
@@ -177,7 +168,6 @@ class Server extends events_1.EventEmitter {
                     player.action_blockplace(data);
                 });
                 socket.on('ActionMove', (data) => {
-                    console.log("Got ActionMove", JSON.stringify(data));
                     player.action_move(data);
                 });
                 socket.on('ChunkNeeded', (data) => {

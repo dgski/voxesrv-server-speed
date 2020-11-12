@@ -106,7 +106,6 @@ class Player {
             items: { 0: null, 1: null, 2: null, 3: null },
             result: null,
         };
-        this._chunksToSend = [];
         this.id = id;
         this.nickname = name;
         this.displayName = name;
@@ -192,7 +191,6 @@ class Player {
         this._server.emit('player-quit', this);
         this._players.save(this.id, this.getObject());
         this.entity.remove();
-        clearInterval(this._chunksInterval);
         setTimeout(() => {
             delete this._players.players[this.id];
         }, 10);
