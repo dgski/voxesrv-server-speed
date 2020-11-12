@@ -129,6 +129,7 @@ export class World {
 
 	async getChunk(id: types.XZ): Promise<Chunk> {
 		const idS = id.toString();
+		
 		const chunkIDs = this.getNeighborIDsChunks(id);
 		const chunks = {};
 

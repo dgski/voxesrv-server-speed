@@ -17,6 +17,7 @@ exports.serverDefaultConfig = {
         spawn: [0, 100, 0],
         generator: 'normal',
         save: true,
+        freeze: false
     },
     plugins: [],
     consoleInput: true,

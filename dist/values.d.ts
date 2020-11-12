@@ -16,6 +16,7 @@ export interface IServerConfig {
         spawn: types.XYZ;
         generator: string;
         save: boolean;
+        freeze: boolean;
     };
     plugins: string[];
     consoleInput: boolean;

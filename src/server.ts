@@ -205,6 +205,10 @@ export class Server extends EventEmitter {
 
 				socket.on('ChunkNeeded', (data) => {					
 					const id = player.world.stringToID(data.id)
+					if(this.config.world.freeze && !player.world.existChunk(id)) {
+						return;
+					}
+
 					player.world.getChunk(id)
 					.then((chunk) =>  {
 						socket.send('WorldChunkLoad', {
@@ -225,7 +229,7 @@ export class Server extends EventEmitter {
 				socket.send('PlayerKick', { reason: 'Timeout!' });
 				socket.close();
 			}
-		}, 10000);
+		}, 100000);
 	}
 
 	loadPluginsList(list: string[]) {

@@ -18,6 +18,7 @@ export interface IServerConfig {
 		spawn: types.XYZ;
 		generator: string;
 		save: boolean;
+		freeze: boolean;
 	};
 	plugins: string[];
 	consoleInput: boolean;
@@ -39,6 +40,7 @@ export const serverDefaultConfig: IServerConfig = {
 		spawn: [0, 100, 0],
 		generator: 'normal',
 		save: true,
+		freeze: false
 	},
 	plugins: [],
 	consoleInput: true,
