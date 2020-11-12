@@ -156,8 +156,7 @@ class World {
         return chk;
     }
     saveAll() {
-        if (!this._server.config.world.save)
-            return;
+        //if (!this._server.config.world.save) return;
         const chunklist = Object.keys(this.chunks);
         fs.writeFile(this.folder + '/world.json', JSON.stringify(this.getSettings()), function (err) {
             if (err)
